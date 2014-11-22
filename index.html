@@ -1,0 +1,61 @@
+<html>
+<head>
+<script src="js/vendor/jquery.js"></script>
+<script src="js/reel.js"></script>
+<style>
+
+body {
+  padding: 0;
+  margin: 0
+}
+
+
+#screen {
+  width:800px;
+  height:600px;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;  
+  position: relative;
+}
+
+video {
+  border: 0;
+  margin: 0;
+  height:100%;
+  width: 400px;
+  display: inline-block;
+}
+
+#reel {
+  height:100%;
+  position: absolute;
+  margin: 0;
+}
+
+
+</style>
+</head>
+<body>
+
+<div id="screen">
+  
+
+</div>
+
+<script type="text/javascript">
+
+var reel = new Reel({
+  source: "#screen",
+  videoUrls: [
+    "http://mtc.cdn.vine.co/r/videos/3AB6D2EB881147000361383788544_109087e8457.3.2.mp4?versionId=kM3uOGA3tDvGUgn1YOJhJbYPjvyK42jN",
+    "http://mtc.cdn.vine.co/r/videos/9E4B607E3D1147189626063491072_3c0c6a972b7.0.1.15411823243570642344.mp4?versionId=UEolk4rDfyvf5fbpAt89992c0I6FyjNB"
+      ]
+  });
+
+reel.build();
+reel.start();
+
+</script>
+</body>
+</html>
