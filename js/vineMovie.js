@@ -13,8 +13,7 @@ var VineMovie = (function($) {
   }
 
   _VineMovie.prototype.start = function() {
-    $(this.currentDomVideo()).show();
-    this.currentDomVideo().play();    
+    this.play();
   }
 
   _VineMovie.prototype.currentDomVideo = function() {
@@ -26,11 +25,16 @@ var VineMovie = (function($) {
 
     _updateCurrentVideoCounter.call(this)    
 
+    this.play();
+  }
+
+  _VineMovie.prototype.play = function() {
     $(this.currentDomVideo()).show();
     this.currentDomVideo().play();
   }
 
 
+  //private methods
   function _hideAllVideos() {
     $(this.$el.find("video")).hide();    
   }
@@ -38,7 +42,6 @@ var VineMovie = (function($) {
   function _updateCurrentVideoCounter() {
     this.currentVideo = (this.currentVideo + 1) % this.$el.find("video.reel-clip").length;  
   }
-
 
   function _formatVideosToReel() {
     var $videos = this.$el.find('video'),
