@@ -38,6 +38,7 @@ var VineMovie = (function($) {
 
   _VineMovie.prototype.playNext = function() {
     _hideAllVideos.call(this);
+    this.currentDomVideo().pause();
     _updateCurrentVideoCounter.call(this)    
     this.play();
   }
@@ -94,6 +95,13 @@ var VineMovie = (function($) {
         reel.playNext();
       });
 
+      $videos.eq(i).on('timeupdate', function(event) {
+        var order = $(reel.currentDomVideo()).data('order');
+        var currentTime = reel.currentDomVideo().currentTime;
+        reel.$controls.val(_getMaxLengthUpto(reel.allVideos(), order) + currentTime)
+        
+      })
+
       $videos.eq(i).on('click', function() {
         if(reel.isPlaying()) {
           reel.stop();
@@ -105,11 +113,16 @@ var VineMovie = (function($) {
       if(jQuery.ui) {
         $videos.eq(i).on('remove', function(){
           var videoIsCurrentlyPlaying = !this.paused;
-          if(videoIsCurrentlyPlaying) {
-            reel.currentVideo = reel.currentVideo - 1            
-            _removeVideoFromReel(this)
-            reel.playNext();
-          }
+  
+
+          _removeVideoFromReel(this);
+          _reassignReelOrder.call(reel);
+          _updateControls.call(reel);
+          reel.currentVideo = 0;
+          reel.$controls.val(0)
+          reel.play();
+          // reel.stop();
+          
         });
       }
     }
@@ -127,22 +140,34 @@ var VineMovie = (function($) {
     _addVideoControls.call(this);
   }
 
+  function _updateControls() {
+    this.$controls.attr('max', _getMaxLengthFrom(this.allVideos()));
+  }
+
   function _removeVideoFromReel(video) {
     $(video).removeClass('reel-clip')
+  }
+
+  function _reassignReelOrder() {
+    var $videos = this.allVideos();
+    for(var i = 0; i < $videos.length; i++) {
+      $videos.eq(i).attr('data-order', i);
+    }
   }
 
   function _addVideoControls() {
     var $controls = $("<input type='range' class='reel-clip-control' min='0' step='"+ this.controlStep + "'>");
     $controls.attr('max', _getMaxLengthFrom(this.allVideos()));
+    $controls.val(0);
 
     var self = this;
 
     $controls.on('mousedown', function(event) {
-      console.log('mousedown');
       self.stop();
     });
 
     $controls.on('input', function(event) {
+      
       var videoInfo = _getVideoFromDuration(self.allVideos(), event.target.value);
       
       if(videoInfo){
@@ -152,7 +177,7 @@ var VineMovie = (function($) {
         self.play()
       }
     });
-
+    this.$controls = $controls;
     this.$el.append($controls);
   }
 
@@ -168,13 +193,21 @@ var VineMovie = (function($) {
     return null;    
   }
 
-  function _getMaxLengthFrom($videos) {
+  function _getMaxLengthFrom($videos, position) {
     var total = 0;
     for(var i = 0; i < $videos.length; i++) {
       total += $videos.get(i).duration
     }
     return total;
   }
+
+  function _getMaxLengthUpto($videos, position) {
+    var total = 0;
+    for(var i = 0; i < position; i++) {
+      total += $videos.get(i).duration
+    }
+    return total;
+  }  
 
   return _VineMovie;
 

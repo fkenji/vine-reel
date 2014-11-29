@@ -33,6 +33,8 @@
 
 </div>
 
+<button id="remove">remove vid</button>
+
 <script type="text/javascript">
 var vine = new VineMovie({
   source: "#screen",
@@ -42,6 +44,9 @@ var vine = new VineMovie({
 vine.start();
 
 
+$("#remove").click(function() {
+  $('video').eq(0).remove();
+})
 </script>
 </body>
 </html>
