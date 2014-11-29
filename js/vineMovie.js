@@ -18,40 +18,27 @@ var VineMovie = (function($) {
     
   }
 
-  _VineMovie.prototype.build = function(){
+  _VineMovie.prototype.start = function(){
     _formatVideosToReel.call(this);
-  
-    var self = this;
-    var readyInterval = setInterval(function() {
-      var elems = self.$el.find("video.reel-clip");
-      var readyElems = $.grep(elems, function(ele) {
-        return ele.readyState > 1
-      });  
-
-      if(readyElems.length === self.$el.find("video.reel-clip").length) {
-        clearInterval(readyInterval)
-        _setReadyStatus.call(self);
-      }
+    this.ready(function() {
+      $(this.ajaxLoader).hide();
+      this.play();
+      _addVideoControls.call(this);      
     })
   }
 
-  _VineMovie.prototype.start = function() { 
-    // this.play();
-  }
 
   _VineMovie.prototype.allVideos = function() {
     return this.$el.find("video.reel-clip");
   }
 
   _VineMovie.prototype.currentDomVideo = function() {
-    return this.$el.find("video.reel-clip").get(this.currentVideo)
+    return this.allVideos().get(this.currentVideo)
   }
 
   _VineMovie.prototype.playNext = function() {
     _hideAllVideos.call(this);
-
     _updateCurrentVideoCounter.call(this)    
-
     this.play();
   }
 
@@ -60,7 +47,19 @@ var VineMovie = (function($) {
     this.currentDomVideo().play();
   }
 
+ _VineMovie.prototype.ready = function(callback) {
+    var self = this;
+    var readyInterval = setInterval(function() {
+      var numberOfVideosReady = $.grep(self.allVideos(), function(ele) {
+        return ele.readyState > 1
+      });  
 
+      if(numberOfVideosReady.length === self.allVideos().length) {
+        clearInterval(readyInterval);
+        callback.call(self);
+      }
+    })    
+  }
 
 
   //private methods
@@ -98,6 +97,7 @@ var VineMovie = (function($) {
       }
     }
   }
+
 
   function _setLoadingStatus() {
     _hideAllVideos.call(this);
