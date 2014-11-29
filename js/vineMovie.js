@@ -7,15 +7,40 @@ var VineMovie = (function($) {
     this.muted = spec.muted || true
     this.currentVideo = 0
     this.step = this.step || 0.01
+
+    if(spec.ajaxLoaderUrl) {
+      var img = new Image();
+      img.src = spec.ajaxLoaderUrl;
+      this.ajaxLoader = img;
+    } else {
+      this.ajaxLoader = "Loading..."
+    }
+    
   }
 
   _VineMovie.prototype.build = function(){
     _formatVideosToReel.call(this);
-    _addVideoControls.call(this);
+  
+    var self = this;
+    var readyInterval = setInterval(function() {
+      var elems = self.$el.find("video.reel-clip");
+      var readyElems = $.grep(elems, function(ele) {
+        return ele.readyState > 1
+      });  
+
+      if(readyElems.length === self.$el.find("video.reel-clip").length) {
+        clearInterval(readyInterval)
+        _setReadyStatus.call(self);
+      }
+    })
   }
 
-  _VineMovie.prototype.start = function() {
-    this.play();
+  _VineMovie.prototype.start = function() { 
+    // this.play();
+  }
+
+  _VineMovie.prototype.allVideos = function() {
+    return this.$el.find("video.reel-clip");
   }
 
   _VineMovie.prototype.currentDomVideo = function() {
@@ -36,6 +61,8 @@ var VineMovie = (function($) {
   }
 
 
+
+
   //private methods
   function _hideAllVideos() {
     $(this.$el.find("video")).hide();    
@@ -48,9 +75,12 @@ var VineMovie = (function($) {
   function _formatVideosToReel() {
     var $videos = this.$el.find('video'),
         reel = this;
+
+        _setLoadingStatus.call(this)
     
     for(var i = 0; i < $videos.length; i++) {
       $videos.eq(i).hide();
+      $videos.attr('preload', 'metadata')
       $videos.eq(i).addClass('reel-clip')
       $videos.eq(i).on('ended', function(){
         reel.playNext()
@@ -67,6 +97,17 @@ var VineMovie = (function($) {
         });
       }
     }
+  }
+
+  function _setLoadingStatus() {
+    _hideAllVideos.call(this);
+    this.$el.prepend(this.ajaxLoader)
+  }
+
+  function _setReadyStatus() {
+    $(this.ajaxLoader).hide();
+    this.play();
+    _addVideoControls.call(this);
   }
 
   function _removeVideoFromReel(video) {

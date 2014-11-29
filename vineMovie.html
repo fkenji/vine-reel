@@ -15,6 +15,10 @@
 <body>
 
 <div id="screen">
+
+    <video src="https://flatiron-videos.s3.amazonaws.com/ruby-006/Ruby-006%20-%20Deleting%20with%20Ajax.mp4" muted>
+    </video>
+
     <video src="http://v.cdn.vine.co/r/videos/9B3DB14CD11147628505182666752_386718a51d4.0.1.6199524836216582996.mp4?versionId=GaRRFOM9OrwibQEXbTkFiGj1Y6arIYuo" muted>
     </video>
   
@@ -26,12 +30,14 @@
 
     <video src="http://mtc.cdn.vine.co/r/videos/D3C964E5941147661900390232064_37755c88ebf.0.1.18361031168910316275.mp4?versionId=dtvNqX6SmPPGPLKxjfMKdQNtMEfmv7qc" muted>  
     </video>
+    
 
 </div>
 
 <script type="text/javascript">
 var vine = new VineMovie({
-  source: "#screen"
+  source: "#screen",
+  ajaxLoaderUrl: "images/ajax-loader.gif"
 });
 
 vine.build();
