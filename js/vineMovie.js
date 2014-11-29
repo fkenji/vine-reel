@@ -87,10 +87,11 @@ var VineMovie = (function($) {
     
     for(var i = 0; i < $videos.length; i++) {
       $videos.eq(i).hide();
-      $videos.attr('preload', 'metadata')
-      $videos.eq(i).addClass('reel-clip')
+      $videos.attr('preload', 'metadata');
+      $videos.eq(i).addClass('reel-clip');
+      $videos.eq(i).attr('data-order', i);
       $videos.eq(i).on('ended', function(){
-        reel.playNext()
+        reel.playNext();
       });
 
       $videos.eq(i).on('click', function() {
@@ -142,10 +143,29 @@ var VineMovie = (function($) {
     });
 
     $controls.on('input', function(event) {
-      console.log('input', event.target.value);
+      var videoInfo = _getVideoFromDuration(self.allVideos(), event.target.value);
+      
+      if(videoInfo){
+         _hideAllVideos.call(self);  
+        self.currentVideo = videoInfo.videoOrder;
+        self.currentDomVideo().currentTime = videoInfo.seektime
+        self.play()
+      }
     });
 
     this.$el.append($controls);
+  }
+
+
+  function _getVideoFromDuration($videos, duration) {    
+    var total = 0;
+    for(var i = 0; i < $videos.length; i++) {
+      if(duration >= total && duration <= ($videos.get(i).duration + total) ) {
+        return { videoOrder: $videos.eq(i).data('order'), seektime: (duration - total) }
+      }
+      total += $videos.get(i).duration
+    }
+    return null;    
   }
 
   function _getMaxLengthFrom($videos) {
