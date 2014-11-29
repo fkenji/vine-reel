@@ -6,10 +6,12 @@ var VineMovie = (function($) {
     this.videoUrls = spec.videoUrls
     this.muted = spec.muted || true
     this.currentVideo = 0
+    this.step = this.step || 0.01
   }
 
   _VineMovie.prototype.build = function(){
     _formatVideosToReel.call(this);
+    _addVideoControls.call(this);
   }
 
   _VineMovie.prototype.start = function() {
@@ -64,12 +66,17 @@ var VineMovie = (function($) {
           }
         });
       }
-
     }
   }
 
   function _removeVideoFromReel(video) {
     $(video).removeClass('reel-clip')
+  }
+
+  function _addVideoControls() {
+    var $controls = $("<input type='range' min='0' step='"+ this.step + "'>");
+    $controls.attr('max', 100)
+    this.$el.append($controls);
   }
 
   return _VineMovie;
