@@ -6,7 +6,7 @@ var VineMovie = (function($) {
     this.videoUrls = spec.videoUrls
     this.muted = spec.muted || true
     this.currentVideo = 0
-    this.step = this.step || 0.01
+    this.controlStep = spec.controlStep || 0.01
 
     if(spec.ajaxLoaderUrl) {
       var img = new Image();
@@ -115,9 +115,18 @@ var VineMovie = (function($) {
   }
 
   function _addVideoControls() {
-    var $controls = $("<input type='range' min='0' step='"+ this.step + "'>");
-    $controls.attr('max', 100)
+    var $controls = $("<input type='range' class='reel-clip-control' min='0' step='"+ this.controlStep + "'>");
+
+    $controls.attr('max', _getMaxLengthFrom(this.allVideos()));
     this.$el.append($controls);
+  }
+
+  function _getMaxLengthFrom($videos) {
+    var total = 0;
+    for(var i = 0; i < $videos.length; i++) {
+      total += $videos.get(i).duration
+    }
+    return total;
   }
 
   return _VineMovie;
