@@ -51,6 +51,10 @@ var VineMovie = (function($) {
    this.currentDomVideo().pause(); 
   }
 
+  _VineMovie.prototype.isPlaying = function() {
+    return !(this.currentDomVideo().paused)
+  }
+
  _VineMovie.prototype.ready = function(callback) {
     var self = this;
     var readyInterval = setInterval(function() {
@@ -87,6 +91,14 @@ var VineMovie = (function($) {
       $videos.eq(i).addClass('reel-clip')
       $videos.eq(i).on('ended', function(){
         reel.playNext()
+      });
+
+      $videos.eq(i).on('click', function() {
+        if(reel.isPlaying()) {
+          reel.stop();
+        } else{
+          reel.play();
+        }
       });
 
       if(jQuery.ui) {
