@@ -122,19 +122,6 @@ var VineMovie = (function($) {
     this.$el.prepend(this.ajaxLoader)
   }
 
-  function _setReadyStatus() {
-    $(this.ajaxLoader).hide();
-    this.play();
-    _addVideoControls.call(this);
-  }
-
-  function _updateControls() {
-    this.$controls.attr('max', _getMaxLengthFrom(this.allVideos()));
-  }
-
-  function _removeVideoFromReel(video) {
-    $(video).removeClass('reel-clip')
-  }
 
   function _reassignReelOrder() {
     var $videos = this.allVideos();
