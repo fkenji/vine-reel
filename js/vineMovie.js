@@ -47,6 +47,10 @@ var VineMovie = (function($) {
     this.currentDomVideo().play();
   }
 
+  _VineMovie.prototype.stop = function() {
+   this.currentDomVideo().pause(); 
+  }
+
  _VineMovie.prototype.ready = function(callback) {
     var self = this;
     var readyInterval = setInterval(function() {
@@ -116,8 +120,19 @@ var VineMovie = (function($) {
 
   function _addVideoControls() {
     var $controls = $("<input type='range' class='reel-clip-control' min='0' step='"+ this.controlStep + "'>");
-
     $controls.attr('max', _getMaxLengthFrom(this.allVideos()));
+
+    var self = this;
+
+    $controls.on('mousedown', function(event) {
+      console.log('mousedown');
+      self.stop();
+    });
+
+    $controls.on('input', function(event) {
+      console.log('input', event.target.value);
+    });
+
     this.$el.append($controls);
   }
 
