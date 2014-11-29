@@ -44,9 +44,13 @@ var VineMovie = (function($) {
   }
 
   _VineMovie.prototype.play = function() {
-    $(this.currentDomVideo()).show();
+    this.show();
     this.currentDomVideo().play();
   }
+
+  _VineMovie.prototype.show = function() {
+    $(this.currentDomVideo()).show();
+  }  
 
   _VineMovie.prototype.stop = function() {
    this.currentDomVideo().pause(); 
@@ -109,22 +113,6 @@ var VineMovie = (function($) {
           reel.play();
         }
       });
-
-      if(jQuery.ui) {
-        $videos.eq(i).on('remove', function(){
-          var videoIsCurrentlyPlaying = !this.paused;
-  
-
-          _removeVideoFromReel(this);
-          _reassignReelOrder.call(reel);
-          _updateControls.call(reel);
-          reel.currentVideo = 0;
-          reel.$controls.val(0)
-          reel.play();
-          // reel.stop();
-          
-        });
-      }
     }
   }
 
@@ -174,7 +162,7 @@ var VineMovie = (function($) {
          _hideAllVideos.call(self);  
         self.currentVideo = videoInfo.videoOrder;
         self.currentDomVideo().currentTime = videoInfo.seektime
-        self.play()
+        self.show()
       }
     });
     this.$controls = $controls;
