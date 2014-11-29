@@ -9,59 +9,49 @@ var VineMovie = (function($) {
   }
 
   _VineMovie.prototype.build = function(){
-    this.$reel = $("<div>")
-    this.$reel.attr("class", "reel")
-    this.$el.append(this.$reel)
-    _addVideosToReel.call(this, this.$el, this.videoUrls);
+    _formatVideosToReel.call(this);
   }
 
-
   _VineMovie.prototype.start = function() {
-    $(this.domVideoElements[this.currentVideo]).show();
-    this.domVideoElements[this.currentVideo].play();    
+    $(this.currentDomVideo()).show();
+    this.currentDomVideo().play();    
+  }
+
+  _VineMovie.prototype.currentDomVideo = function() {
+    return this.$el.find("video.reel-clip").get(this.currentVideo)
   }
 
   _VineMovie.prototype.playNext = function() {
-    $(this.domVideoElements[this.currentVideo]).hide();
+    $(this.$el.find("video")).hide();  
 
-    var nextToPlay = (this.currentVideo + 1) % this.domVideoElements.length; 
-    $(this.domVideoElements[nextToPlay]).show();
-    this.domVideoElements[nextToPlay].play();
-    this.currentVideo = nextToPlay;
+    this.currentVideo = (this.currentVideo + 1) % this.$el.find("video.reel-clip").length;  
+
+    $(this.currentDomVideo()).show();
+    this.currentDomVideo().play();
   }
 
 
-  function _addVideosToReel(sourceDiv, urls) {
-    var domVideoElements = []
-    var self = this;
-    for(var i = 0; i < urls.length; i++){
-      var $video = $("<video>")
-      $video.attr('src', urls[i]);
+  function _formatVideosToReel() {
+    var $videos = this.$el.find('video'),
+        self = this;
 
-      if(this.muted) {
-        $video.attr('muted', 'muted');
-      }
-
-      $video.attr('preload', 'auto');
-
-      $video.on('ended', function(){
+    for(var i = 0; i < $videos.length; i++) {
+      $videos.eq(i).hide()
+      $videos.eq(i).addClass('reel-clip')
+      $videos.eq(i).on('ended', function(){
         self.playNext()
-      })
+      });
+      $videos.eq(i).on('remove', function(){
+        if(!this.paused){
+          self.currentVideo = self.currentVideo - 1
+          $(this).removeClass('reel-clip')
+          self.playNext();
+        }
+      });
 
-      $video.hide();
-
-      // $video.data('next'); 
-      this.domVideoElements.push($video.get()[0])
-      sourceDiv.append($video);
     }
-
-    
   }
 
   return _VineMovie;
 
 })(jQuery);
-
-
-
-     

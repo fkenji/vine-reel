@@ -1,0 +1,71 @@
+<html>
+<head>
+<script src="js/vendor/jquery.js"></script>
+<script src="js/vineMovie.js"></script>
+<style>
+
+body {
+  padding: 0;
+  margin: 0
+}
+
+
+#screen {
+  width:800px;
+  height:600px;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;  
+  position: relative;
+}
+
+video {
+  border: 0;
+  margin: 0;
+  height:100%;
+  width: 400px;
+  display: inline-block;
+}
+
+#reel {
+  height:100%;
+  position: absolute;
+  margin: 0;
+}
+
+
+</style>
+</head>
+<body>
+
+<div id="screen">
+  
+    <video src="http://v.cdn.vine.co/r/videos/9B3DB14CD11147628505182666752_386718a51d4.0.1.6199524836216582996.mp4?versionId=GaRRFOM9OrwibQEXbTkFiGj1Y6arIYuo"> 
+    </video>
+
+    <video src="http://mtc.cdn.vine.co/r/videos/DCAAA601161147594406665351168_3b5e75d3b88.0.1.880635800311096088.mp4?versionId=E9AvypP8xfphw7.2Q75q5D8QiHeQcbhc" >
+    </video>
+
+    <video src="http://v.cdn.vine.co/r/videos/D1C91DE0CC1147593697945436160_3490dd20824.0.1.944355710863107527.mp4?versionId=T1TuffPaTMbi2jKvQGb6PE1Ck6Kh6HMH" >  
+    </video>
+
+    <video src="http://mtc.cdn.vine.co/r/videos/D3C964E5941147661900390232064_37755c88ebf.0.1.18361031168910316275.mp4?versionId=dtvNqX6SmPPGPLKxjfMKdQNtMEfmv7qc" >    
+    </video>
+
+    <input type="range" />
+</div>
+
+
+
+<script type="text/javascript">
+
+var movie = new VineMovie({
+  source: "#screen",
+  });
+
+movie.build();
+movie.start();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<html>
+  
+  <head>
+    <script src="js/vendor/jquery.js"></script>
+  </head>
+
+  <body>
+
+    <video id="thevideo" src="http://v.cdn.vine.co/r/videos/9B3DB14CD11147628505182666752_386718a51d4.0.1.6199524836216582996.mp4?versionId=GaRRFOM9OrwibQEXbTkFiGj1Y6arIYuo" muted> 
+    </video>
+
+    <input type="range" name="range" id="the_range" min="0" max="100" value="0" 
+    step=".01"
+    />
+    
+    <script>
+    // $(function() {
+       var range =  $("#the_range");
+       var video =  $("#thevideo");
+       var domvideo =  video.get(0);
+
+       video.on('loadedmetadata', function() {
+        range.attr("max", domvideo.duration)
+       });
+
+       video.on('click',function(event) {
+        console.log('play')
+        if(!this.paused){
+          event.target.pause();
+        } else {
+          event.target.play();
+        }
+       });
+
+       range.on('mousedown', function() {
+        domvideo.pause()
+        console.log('mousedown')
+       })
+
+       range.on('change', function() {
+        console.log('change')
+       })
+
+       range.on('input', function(e) {
+        console.log('input', e.target.value)
+        domvideo.currentTime = e.target.value
+       })       
+
+       video.get(0).play();
+
+       video.on('timeupdate', function(event) {
+         console.log('timeupdate')
+         var currTime = video.get(0).currentTime;
+
+         range.val(currTime)
+       });
+
+      // })
+
+    </script>
+  </body>
+</html>
